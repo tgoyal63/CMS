@@ -1,0 +1,16 @@
+attendance
+key1
+key2 
+pm = k1 + k2;
+
+attendance.model
+
+8 columns -> periods
+1 column -> student_id
+1 column -> day
+
+
+student_id
+day1: { 
+
+}

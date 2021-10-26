@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Attendence</title>
+
+	<style>
+		#container {
+			margin: 0px auto;
+			width: 500px;
+			height: 375px;
+			border: 10px #333 solid;
+		}
+
+		#player {
+			width: 500px;
+			height: 375px;
+			background-color: #666;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="container">
+		<video autoplay="true" id="player"> </video><br><br><br>
+		<canvas id="canvas" width=320 height=240></canvas><br>
+		<button id="capture">Capture</button>
+	</div>
+	<script>
+		const player = document.getElementById('player');
+		const canvas = document.getElementById('canvas');
+		const context = canvas.getContext('2d');
+		const captureButton = document.getElementById('capture');
+
+		const constraints = {
+			video: true,
+		};
+
+		captureButton.addEventListener('click', () => {
+			// Draw the video frame to the canvas.
+			context.drawImage(player, 0, 0, canvas.width, canvas.height);
+
+			let a = JSON.stringify(canvas.toDataURL('image/jpeg'));
+			console.log(JSON.parse(a));
+			fetch('http://localhost:4000/student/attendance', {
+				method: 'POST',
+				body: JSON.stringify({image: a}),
+				headers: {
+					'Content-type': 'application/json; charset=UTF-8'
+				}
+			})
+				.then(response => response.json())
+				.then(json => {
+					console.log(json);
+				});
+		});
+
+		// Attach the video stream to the video element and autoplay.
+		navigator.mediaDevices.getUserMedia(constraints)
+			.then((stream) => {
+				player.srcObject = stream;
+			});
+	</script>
+</body>
+
+</html>
